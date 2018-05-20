@@ -14,3 +14,8 @@ Jake: HTML, CSS
 Harrison: HTML, CSS
 Travis: Javascript
 Ryan: Javascript
+
+
+
+Basic structure:
+
