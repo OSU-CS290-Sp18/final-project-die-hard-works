@@ -1,4 +1,13 @@
 
+//Handle AJAX information
+var xml = new XMLHttpRequest();
+
+
+
+
+
+
+
 
 //create and return a cell-wrapper with the grahical HTML divs nested inside
 function createCellWrapper(color){
@@ -92,11 +101,52 @@ function toggleState(event){
   }
 }
 
-//grab the test button and add an event listener to it
+//grab the reset button and add an event listener to it
 var resetButton = document.getElementById('resetButton');
 resetButton.addEventListener('click', resetStates);
+
+//grab the load button and add an event listener to it
+var loadButton = document.getElementById('loadButton');
+loadButton.addEventListener('click', requestBoard);
 
 //add an event listener to each cell-wrapper
 for(var i = 0; i < cells.length; i++){
 cells[i].addEventListener('click', toggleState);
+}
+
+
+
+
+//need to impliment a basic graphics engine
+function updateGraphics(board){
+  //get all the cell wrappers
+  var cells = document.getElementsByClassName('cell-wrapper');
+
+  //console.log("==Cell Array: ", cells.length);
+  //console.log("==Board Array: ", board.length);
+
+  for(var i = 0; i < board.length; i++){
+    if(board[i] == 'B'){
+      cells[i].querySelector('.state-one').style.display = 'none';
+    }
+    else if(board[i] == 'R'){
+      cells[i].querySelector('.state-one').style.display = 'block';
+    }
+  }
+}
+
+
+function requestBoard(){
+  xml.open("GET", "board");
+
+  console.log("==Requesting Board");
+
+  xml.onload = function(){
+    var data = JSON.parse(xml.responseText);
+    updateGraphics(data);
+    //console.log(data);
+  }
+
+  xml.send();
+
 }
