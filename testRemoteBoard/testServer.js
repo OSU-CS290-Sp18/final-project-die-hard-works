@@ -39,7 +39,10 @@ function updateBoard(){
 //Handle requests to log into the server
 function requestHandler(request, response){
   console.log("==request:", request.url);
-  switch(request.url){
+
+  var request = request.url.replace(/%22/g, "\"").split('%20');
+
+  switch(request[0]){
     case "/testBoard.html":
     case "/":
          response.statusCode = 200;
@@ -73,6 +76,18 @@ function requestHandler(request, response){
           console.log("board sent");
           //update the boardArray
           updateBoard();
+          break;
+
+    case "/CLIENT_DATA":
+          console.log("==SUCCESS!!");
+          var data = JSON.parse(request[1]);
+          console.log(data[1]);
+
+          response.statusCode = 200;
+          response.setHeader("Content-Type", "text/html");
+          response.write("Move Accepted");
+          response.end();
+
           break;
 
     default:

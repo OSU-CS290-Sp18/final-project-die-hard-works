@@ -109,6 +109,10 @@ resetButton.addEventListener('click', resetStates);
 var loadButton = document.getElementById('loadButton');
 loadButton.addEventListener('click', requestBoard);
 
+//grab the Send button and add an event listener to it
+var sendButton = document.getElementById('sendButton');
+sendButton.addEventListener('click', send);
+
 //add an event listener to each cell-wrapper
 for(var i = 0; i < cells.length; i++){
 cells[i].addEventListener('click', toggleState);
@@ -143,10 +147,30 @@ function requestBoard(){
 
   xml.onload = function(){
     var data = JSON.parse(xml.responseText);
+    console.log(xml.responseText);
     updateGraphics(data);
     //console.log(data);
   }
 
   xml.send();
 
+}
+
+function send(){
+
+  var info = ['blue', 'green', 'red'];
+
+  xml.open("POST", "CLIENT_DATA " + JSON.stringify(info));
+
+  //console.log(JSON.stringify(info));
+
+  console.log("==Sending Info");
+
+  xml.onload = function(){
+    var data = xml.responseText;
+    //updateGraphics(data);
+    console.log(data);
+  }
+
+  xml.send();
 }
