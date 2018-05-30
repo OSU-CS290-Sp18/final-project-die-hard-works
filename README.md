@@ -10,7 +10,7 @@ server itself handling the game aspect then updates it on both sides.
 AI would be a dummy AI, doing random moves when the server would do a check on the move
 
 
-Jake: HTML, CSS
-Harrison: HTML, CSS
-Travis: Javascript
-Ryan: Javascript
+Jake (speerjake): HTML, CSS
+Harrison (moorehar): HTML, CSS
+Travis (winghenge): Javascript
+Ryan (cryarr): Javascript
