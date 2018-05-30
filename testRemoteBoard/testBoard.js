@@ -158,8 +158,11 @@ function requestBoard(){
 
 function send(){
 
-  var info = ['blue', 'green', 'red'];
+  //the information to send
+  var info = ['client_cookie', 'start_cell', 'end_cell'];
 
+  //prepaire the xml object to send the info array with the heaer "CLIENT_DATA" to tell
+  //the server that this is a client comunication
   xml.open("POST", "CLIENT_DATA " + JSON.stringify(info));
 
   //console.log(JSON.stringify(info));
@@ -167,9 +170,18 @@ function send(){
   console.log("==Sending Info");
 
   xml.onload = function(){
-    var data = xml.responseText;
+    //read the response back from the server
+    //this is very important, if the XML object POSTs but doenst get a response it throws an error
+    //in the future this will be used to say if the move as legal or if the user will have to make a different
+    //move. It will also cause the client to request the board again if it was successful
+    var data = JSON.parse(xml.responseText);
     //updateGraphics(data);
     console.log(data);
+
+    //if the move was successful, request the updated boardArray
+    if(data == "Move Accepted"){
+      requestBoard();
+    }
   }
 
   xml.send();

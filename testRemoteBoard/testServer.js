@@ -40,8 +40,13 @@ function updateBoard(){
 function requestHandler(request, response){
   console.log("==request:", request.url);
 
+  //for whatever reason, when sending data from the client to the server "" turn into %22
+  //and spaced into %20. we split the response on any space (%20) since we know that
+  //any space will come from the client sending JSON information to us. we also replace any %22
+  //into "" so that JSON.parse can return the array
   var request = request.url.replace(/%22/g, "\"").split('%20');
 
+  //request[0] will always be populated with either the requested URL or the CLIENT_DATA header
   switch(request[0]){
     case "/testBoard.html":
     case "/":
@@ -78,14 +83,21 @@ function requestHandler(request, response){
           updateBoard();
           break;
 
+    //if a response has the header of "/CLIENT_DATA", then we have recieved a response from a client
     case "/CLIENT_DATA":
           console.log("==SUCCESS!!");
+
+          //parse the JSON information back into an array
+          //if we recieved the "CLIENT_DATA" header, we know that request[1] will be populated with
+          //the client's data array
           var data = JSON.parse(request[1]);
           console.log(data[1]);
 
+          //let the client know we recieved their comunication and that the move was Accepted
+          //in the future this will check if the move was legal and update the baord acordingly
           response.statusCode = 200;
           response.setHeader("Content-Type", "text/html");
-          response.write("Move Accepted");
+          response.write(JSON.stringify("Move Accepted"));
           response.end();
 
           break;
