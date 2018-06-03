@@ -4,11 +4,6 @@ var xml = new XMLHttpRequest();
 
 
 
-
-
-
-
-
 //create and return a cell-wrapper with the grahical HTML divs nested inside
 function createCellWrapper(color){
   var cell = document.createElement('div');
