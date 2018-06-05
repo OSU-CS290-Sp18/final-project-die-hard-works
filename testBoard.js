@@ -38,7 +38,7 @@ function createCellWrapper(color){
 var checkerboard = document.getElementById('checkerboard');
 
 for(var i = 0; i < 4; i++){
-  //console.log("==Running");
+ // console.log("==Running");
   for(var j = 0; j < 4; j++){
     checkerboard.appendChild(createCellWrapper('white'));
 
@@ -90,6 +90,8 @@ function toggleState(event){
   else{
     event.currentTarget.querySelector('.state-one').style.display = 'block';
   }
+
+
 }
 
 //grab the test button and add an event listener to it
@@ -100,3 +102,31 @@ resetButton.addEventListener('click', resetStates);
 for(var i = 0; i < cells.length; i++){
 cells[i].addEventListener('click', toggleState);
 }
+
+
+//adding an event listener to the cells to make them move.
+for(var i = 0; i < cells.length; i++){
+	cells[i].addEventListener('click', move);
+}
+
+
+
+var coordinates = [];
+
+//This function takes one object and returns it to get one quardinate. 
+function move(event){
+	console.log("Clicked");
+	console.log(event.currentTarget);
+	coordinates.push(event.currentTarget);
+}
+
+
+
+
+
+
+
+
+
+
+
