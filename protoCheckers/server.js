@@ -9,6 +9,8 @@ var bodyParse = require('body-parser');
 var app = express();
 var port = process.env.PORT || 3000;
 
+var checkersEn = require('./checkersEngine/checkers');
+
 //setup handlebars
 app.engine('handlebars', expressHB({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
@@ -35,6 +37,7 @@ function newCookie(){
       //add the cookie to the player object first then push into the array
       var player = { gameID: 0, cookie: newCookie};
       players.push(player);
+     // console.log('pushing the player: ', player);
       for(var i = 0; i < players.length; i++){
         console.log("==Players:", players[i]);
       }
@@ -60,6 +63,8 @@ function checkCookie(cookie){
 //====================
 //Server Functionality
 //====================
+
+checkersEngine.checkersEn();
 
 
   app.post('/game/init/:cookie', function (req, res, next) {
