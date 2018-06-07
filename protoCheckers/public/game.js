@@ -1,9 +1,11 @@
 
 //Handle AJAX information
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+
 var xml = new XMLHttpRequest();
 
 //global boardArray
-var boardArray;
+var boardArray = [];
 
 
 
@@ -88,15 +90,31 @@ loadButton.addEventListener('click', requestBoard);
 var sendButton = document.getElementById('sendButton');
 sendButton.addEventListener('click', send("move"));
 
+//getting all of the cells into an array for the board
+/*
+for(var i = 0; i< cells.length; i++){
+	for (var j = 0; j < cells.length; j++){
+		boardArray[i][j] = cells[i][j]; 
+	}
+}
+*/
+
+
+function getBoardArray(){
+	return boardArray; 
+}
+
+
 //add an event listener to each cell-wrapper
 for(var i = 0; i < cells.length; i++){
-//cells[i].addEventListener('click', toggleState);
+	cells[i].addEventListener('click', toggleState);
 }
 
 
 
 
 //need to impliment a basic graphics engine
+//	this function might prove useful for updating the status of the board
 function updateGraphics(board){
   //get all the cell wrappers
   var cells = document.getElementsByClassName('cell-wrapper');

@@ -8,8 +8,12 @@ var bodyParse = require('body-parser');
 
 var app = express();
 var port = process.env.PORT || 3000;
-
+//gets the checkers engine so we can pass the move to do the move checking 
 var checkersEn = require('./checkersEngine/checkers');
+
+//this allows us to pass around the board, so we can have the checking the valid and then passing the moves
+//var gameJs = require('./public/game');
+
 
 //setup handlebars
 app.engine('handlebars', expressHB({ defaultLayout: 'main' }));
@@ -17,6 +21,9 @@ app.set('view engine', 'handlebars');
 
 //setup the body parser
 //app.use(bodyParse.JSON);
+
+//var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+//var xml = new XMLHttpRequest();
 
 //Player array containing the user ID's and the game number
 var players = [];
@@ -64,9 +71,16 @@ function checkCookie(cookie){
 //Server Functionality
 //====================
 
-checkersEngine.checkersEn();
+var boardArray = [];
 
-
+// setting up the engine and functionality.
+	//testing the checkers engine
+	
+//checkersEn.checkersEngine();
+/*
+var boardArray = gameJs.getBoardArray();
+console.log(boardArray);
+*/
   app.post('/game/init/:cookie', function (req, res, next) {
     //set up the game ID's and put 2 players in the same game
      //get the cookie from the URL
@@ -179,6 +193,8 @@ app.get('/timeout', function (req, res, next) {
   app.get('/game/checkers/:userID', function (req, res, next) {
 
      res.status(200).render('gamePage');
+
+     //game code goes here. it will check for valid move based on the requests 
 
 });
 

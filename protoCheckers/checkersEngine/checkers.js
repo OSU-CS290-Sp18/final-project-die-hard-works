@@ -12,7 +12,8 @@ function checkersEngine(boardArray, userNum, start_cell, end_cell){
 	 *
 	 * we might want to think about how it is going to do the checking? Maybe do a two dimensional array representing the entire board.
 	 */
-
+	
+	console.log('IN THE CHECKERS ENGINE NOW');
 }
 
 //setBoard sets up the board to the begining setup
