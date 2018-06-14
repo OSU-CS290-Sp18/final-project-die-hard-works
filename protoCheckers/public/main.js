@@ -133,6 +133,21 @@ function searchForGame(){
 }
 
 
+function hideTurn() { //INSERT FUNCTIONALITY FOR WHEN WE KNOW WHOS TURN IT IS.
+  var yourT = document.getElementbyId("yourTurn");
+  var notT = document.getElementbyId("NotyourTurn");
+
+  if (yourT.style.display === "none") 
+  {
+    notT.style.display = "block";
+  } else 
+  {
+    yourT.style.display = "block";
+  }
+
+}
+
+
 //===============
 //Event Listners
 //===============
