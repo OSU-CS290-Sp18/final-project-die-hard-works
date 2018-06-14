@@ -187,3 +187,12 @@ a:focus {
   background-color: black;
   border: 5px solid gold;
 }
+//////////////////
+/* SCORE BOARD */
+/////////////////
+
+#pretty{
+  font-size: 150%;
+  position: fixed;
+  transform: translateX(-50%);
+}
