@@ -13,8 +13,8 @@ var port = process.env.PORT || 3000;
 app.engine('handlebars', expressHB({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
-//setup the body parser
-//app.use(bodyParse.JSON);
+//setup the Date object for timeouts
+var date = new Date();
 
 //Player array containing the user ID's and the game number
 var players = [];
@@ -33,7 +33,7 @@ function newCookie(){
       console.log("==returning new cookie:", newCookie);
       //add the cookie to the player array
       //add the cookie to the player object first then push into the array
-      var player = { gameID: 0, cookie: newCookie};
+      var player = { gameID: 0, cookie: newCookie, timeout: date.getTime()};
       players.push(player);
       for(var i = 0; i < players.length; i++){
         console.log("==Players:", players[i]);
@@ -44,6 +44,36 @@ function newCookie(){
   }
 
 }
+
+function newGameID(){
+
+  while(1){
+    //generate a new cookie between 0 and 1000
+    var newID = Math.floor(Math.random() * 1001);
+    //check to see if the cookie is unique
+    if(!checkCookie(newID)){
+      console.log("==returning new gameID:", newCookie);
+      //add the cookie to the player array
+      //add the cookie to the player object first then push into the array
+      return newID;
+    }
+  //cookie already in use, generate a new content
+  }
+
+}
+
+function checkGame(gameID){
+  //check to see if the gameID is unique
+  for(var i = 0; i < players.length; i++){
+    if(players[i].gameID == gameID){
+      console.log("==GameID found");
+      return true;
+    }
+  }
+  //gameID not found
+  return false;
+}
+
 function checkCookie(cookie){
   //check to see if the player's sent cookie was valid
   for(var i = 0; i < players.length; i++){
@@ -56,10 +86,60 @@ function checkCookie(cookie){
   return false;
 }
 
+function logUserInteraction(passedCookie){
+  console.log("++Updating Timestamp of User:", passedCookie);
+  //update the users timestamp to prevent a timeout
+  //find the user's object
+  for(var i = 0; i < players.length; i++){
+    if(players[i].cookie == passedCookie){
+      //update the players timestamp
+      players[i].timestamp = date.getTime();
+      return;
+    }
+  }
+
+
+}
+
+function userTimeout(){
+  //if a user hasnt loged an interaction for 5 minutes remove them from the server
+  //a temporary players array to hold the players that will be kept
+  console.log("++Performing Timeout Check");
+  console.log("++Starting Player Count:", players.length);
+  var temp = [];
+  var currentTime = date.getTime();
+  for(var i = 0; i < players.length; i++){
+    if(currentTime - players[i].timestamp < (5*60*1000)){
+      //dont remove the player, add them to the temp array
+      temp.push(players[i]);
+    }
+  }
+
+  //copy over the new array
+  players = temp;
+
+  console.log("++Ending Player Count:", players.length);
+
+}
+
+function timeoutLoop(){
+  //every 5 seconds, check to see if your game is ready
+  setTimeout(function(){
+
+    userTimeout();//check to see if any users have timed out
+
+    timeoutLoop();//recall the loop
+
+  }, 3*60*1000)//check every 3 minutes to see if any usrs have timed out
+}
+
 
 //====================
 //Server Functionality
 //====================
+
+  //Start the setTimeout loop
+  timeoutLoop();
 
 
   app.post('/game/init/:cookie', function (req, res, next) {
@@ -67,6 +147,9 @@ function checkCookie(cookie){
      //get the cookie from the URL
      var cookie = parseInt(req.params.cookie);
      console.log("++Game Requested from the user:", cookie);
+
+     //update the users timestamp
+     logUserInteraction(cookie);
 
      //get the players index #
      var index = -1;
@@ -78,9 +161,9 @@ function checkCookie(cookie){
      }
 
      //if the player has already been assigned a game that is currently in progress, send them there
-     if(index > 0 && players[index].gameID != 0){
+     if(index >= 0 && players[index].gameID != 0){
        console.log("++Player was already assigned a game in progress");
-       res.status(200).send(JSON.stringify(players.gameID));
+       res.status(200).send(JSON.stringify(players[index].gameID));
      }
      else{
        //see if there is another player waiting for a game
@@ -100,18 +183,15 @@ function checkCookie(cookie){
        else{
          console.log("++A Second Player Was Found");
          //player found! set both game ID's equal to a new game ID
-         var newID = 10;
-         players[index] = newID
-         players[playerTwoIndex] = newID
+         var newID = newGameID();
+         players[index].gameID = newID
+         players[playerTwoIndex].gameID = newID
 
          //send the new game ID to the player currently requesting it
          res.status(200).send(JSON.stringify(newID));
        }
 
      }
-
-
-     //check to see if there is
 
 
   });
@@ -147,6 +227,9 @@ function checkCookie(cookie){
     var cookie = parseInt(req.params.cookie);
     console.log("==Passed Cookie:", cookie);
 
+    //update the users timestamp
+    logUserInteraction(cookie);
+
     console.log("==Requesting Wait Page");
 
     //check to see if the player's cookie is valid
@@ -172,6 +255,9 @@ app.get('/timeout', function (req, res, next) {
 
 
   app.get('/game/checkers/:userID', function (req, res, next) {
+
+    //update the users timestamp
+    //logUserInteraction(cookie);
 
      res.status(200).render('gamePage');
 

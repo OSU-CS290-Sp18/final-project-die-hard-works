@@ -97,6 +97,7 @@ function searchForGame(){
         console.log("==New gameID:", message);
         gameID = message;
         window.sessionStorage.setItem("gameID", gameID);
+        changePage("/game/checkers/"+gameID);
       }
     }
   );
@@ -156,6 +157,15 @@ window.addEventListener('DOMContentLoaded', function () {
   if(waitPage){
     //waitPage.addEventListener('load', searchForGame);
     searchForGame();
+  }
+
+  //if the user has been sent to the state cookies page clear the cookie and request a new one
+  var staleCookie = document.getElementById('staleCookie');
+  if(staleCookie){
+    //clear the cookies
+    clearTheCookies();
+    //request new cookies
+    getUserID();
   }
 
 
