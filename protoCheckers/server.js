@@ -71,7 +71,8 @@ function checkCookie(cookie){
 //Server Functionality
 //====================
 
-var boardArray = [];
+//ignore for now, testings
+//var boardArray = [];
 
 // setting up the engine and functionality.
 	//testing the checkers engine
@@ -81,6 +82,10 @@ var boardArray = [];
 var boardArray = gameJs.getBoardArray();
 console.log(boardArray);
 */
+
+
+
+
   app.post('/game/init/:cookie', function (req, res, next) {
     //set up the game ID's and put 2 players in the same game
      //get the cookie from the URL

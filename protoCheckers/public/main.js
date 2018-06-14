@@ -5,8 +5,10 @@ var userID = 0;
 //the users current game idea
 var gameID = 0;
 
+//the board arary, which will be a two dimensional array
+var boardArray = [];
 
-
+console.log(checkersEngine(boardArray, 0, 0, 0));
 
 //===============
 //Functions
@@ -132,6 +134,11 @@ function searchForGame(){
   //search();
 }
 
+//helper updater function 
+function getBoardArray(){
+	return boardArray;
+
+}
 
 //===============
 //Event Listners
@@ -171,3 +178,9 @@ window.onload = function () {
         window.sessionStorage.setItem("hasCodeRunBefore", true);
     }
 }
+
+
+//grabbing all the cells so we can add them to the board.
+var cells = document.getelementsByClassName('cell-wrapper');
+
+
