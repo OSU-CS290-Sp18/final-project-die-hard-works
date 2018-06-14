@@ -18,7 +18,7 @@ var date = new Date();
 
 //Player array containing the user ID's and the game number
 var players = [];
-
+var scores = require('./scoreBoard');
 
 //=================
 //Functions
@@ -217,7 +217,9 @@ function timeoutLoop(){
   //serve the scoreboard to the client
   app.get('/scoreboard', function(req, res){
     console.log("==Score Board Page Requested");
-    res.status(200).render('scoreboardPage');
+    res.status(200).render('scoreboardPage', {
+   		score: scores
+   	 });
   });
 
 
