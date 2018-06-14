@@ -8,6 +8,10 @@ var bodyParse = require('body-parser');
 
 var fs = require('fs');
 
+var updateJsonFile = require('update-json-file');
+var filePath = "./scoreBoard.json";
+
+
 var app = express();
 var port = process.env.PORT || 3000;
 
@@ -268,8 +272,12 @@ app.get('/timeout', function (req, res, next) {
 
 	for (var i = 0; i < players.length; i++){
 		players[i].score += 20;
-		scores.score = JSON.stringify(players[i].score); 
-		fs.writeFile(scores, scores.score);
+		console.log("THIS IS THE NEW SCORE", players[i].score);
+		updateJsonFile(filePath, (data) => {
+			data.score = players[i].score;
+			return data;
+		});
+
 	}
 
      res.status(200).render('gamePage');
