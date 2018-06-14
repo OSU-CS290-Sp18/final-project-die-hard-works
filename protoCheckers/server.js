@@ -6,6 +6,8 @@ var expressHB = require('express-handlebars');
 
 var bodyParse = require('body-parser');
 
+var fs = require('fs');
+
 var app = express();
 var port = process.env.PORT || 3000;
 
@@ -19,6 +21,8 @@ var date = new Date();
 //Player array containing the user ID's and the game number
 var players = [];
 var scores = require('./scoreBoard');
+var overallscore = 0;
+
 
 //=================
 //Functions
@@ -33,7 +37,7 @@ function newCookie(){
       console.log("==returning new cookie:", newCookie);
       //add the cookie to the player array
       //add the cookie to the player object first then push into the array
-      var player = { gameID: 0, cookie: newCookie, timeout: date.getTime()};
+      var player = { gameID: 0, cookie: newCookie, timeout: date.getTime(), score: 0, name:"player"};
       players.push(player);
       for(var i = 0; i < players.length; i++){
         console.log("==Players:", players[i]);
@@ -257,9 +261,16 @@ app.get('/timeout', function (req, res, next) {
 
 
   app.get('/game/checkers/:userID', function (req, res, next) {
-
+	
     //update the users timestamp
     //logUserInteraction(cookie);
+
+
+	for (var i = 0; i < players.length; i++){
+		players[i].score += 20;
+		scores.score = JSON.stringify(players[i].score); 
+		fs.writeFile(scores, scores.score);
+	}
 
      res.status(200).render('gamePage');
 
