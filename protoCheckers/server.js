@@ -19,6 +19,49 @@ var date = new Date();
 //Player array containing the user ID's and the game number
 var players = [];
 
+//the game array
+var games = [];
+
+
+
+//
+// Temp Functionality
+//
+
+function newBoard(){
+  //create a new board element and return it
+  var board = [];
+  for(var i = 0; i < 64; i++){
+    //init the gameboard array to length 64 with each cell == 'B'
+    boardArray.push('BC');
+  }
+
+  return board;
+}
+
+function newGame(id, cookieOne, cookieTwo){
+  //create the new game object
+  var newGame = {gameID: id, playerOne: cookieOne, playerTwo: cookieTwo, board: newBoard()};
+  //push the new game into the game array
+  games.push(newGame);
+}
+
+function updateBoard(){
+  for(var i = 0; i < boardArray.length; i++){
+    if(boardArray[i] === 'RR'){
+      if(i+1 >= boardArray.length){
+        boardArray[i] = 'BC';
+        boardArray[0] = 'RR';
+        break;
+      }
+      else{
+        boardArray[i] = 'BC';
+        boardArray[i+1] = 'RR';
+        break;
+      }
+    }
+  }
+}
 
 //=================
 //Functions
@@ -52,7 +95,7 @@ function newGameID(){
     var newID = Math.floor(Math.random() * 1001);
     //check to see if the cookie is unique
     if(!checkCookie(newID)){
-      console.log("==returning new gameID:", newCookie);
+      console.log("==returning new gameID:", newID);
       //add the cookie to the player array
       //add the cookie to the player object first then push into the array
       return newID;
@@ -187,6 +230,8 @@ function timeoutLoop(){
          players[index].gameID = newID
          players[playerTwoIndex].gameID = newID
 
+         newGame(newID, players[index].cookie, players{playerTwoIndex}.cookie);
+
          //send the new game ID to the player currently requesting it
          res.status(200).send(JSON.stringify(newID));
        }
@@ -203,6 +248,17 @@ function timeoutLoop(){
     //generate a new Cookie
     var cookie = newCookie();
     res.status(200).send(JSON.stringify(cookie));
+
+  });
+
+  app.post("/graphics/:cookie", function (req, res, next) {
+
+    //give the player a unique ID
+    console.log("==Sending updated Graphics");
+    //generate a new Cookie
+    res.status(200).send(JSON.stringify(boardArray));
+
+    updateBoard();
 
   });
 
