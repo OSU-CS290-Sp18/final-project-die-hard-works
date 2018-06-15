@@ -1,7 +1,4 @@
 
-//Handle AJAX information
-var xml = new XMLHttpRequest();
-
 //global boardArray
 var boardArray;
 
@@ -17,7 +14,7 @@ function createCellWrapper(color){
     cell.className = 'cell-wrapper white';
   }
 
-  //create the five inner divs
+  //create the four inner divs
   var stateOne = document.createElement('div');
   stateOne.className = 'state state-one';
   stateOne.style.display = 'none';
@@ -31,11 +28,17 @@ function createCellWrapper(color){
   stateFour.className = 'state state-four';
   stateFour.style.display = 'none';
 
+  //create the clicked div
+  var clicked = document.createElement('div');
+  stateFour.className = 'notClicked';
+  stateFour.style.display = 'none';
+
   //append states 1-4 onto the cell-wrapper
   cell.appendChild(stateOne);
   cell.appendChild(stateTwo);
   cell.appendChild(stateThree);
   cell.appendChild(stateFour);
+  cell.appendChild(clicked);
 
   //return the cell-wrapper
   return cell;

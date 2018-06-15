@@ -24,9 +24,77 @@ var date = new Date();
 
 //Player array containing the user ID's and the game number
 var players = [];
-var scores = require('./scoreBoard');
-var overallscore = 0;
 
+//the game array
+var games = [];
+
+
+
+//
+// Temp Functionality
+//
+
+function newBoard(){
+  //create a new board element and return it
+  var board = [];
+  for(var i = 0; i < 64; i++){
+    //init the gameboard array to length 64 with each cell == 'B'
+    board.push('BC');
+  }
+
+  //setup the black pieces
+  for(var i = 0; i < 8; i+=2){
+    board[i] = "BB";
+  }
+  //setup the black pieces
+  for(var i = 9; i < 16; i+=2){
+    board[i] = "BB";
+  }
+  //setup the black pieces
+  for(var i = 16; i < 24; i+=2){
+    board[i] = "BB";
+  }
+
+  //setup the red pieces
+  for(var i = 63; i > 55; i-=2){
+    board[i] = "RR";
+  }
+  //setup the red pieces
+  for(var i = 54; i > 46; i-=2){
+    board[i] = "RR";
+  }
+  //setup the red pieces
+  for(var i = 47; i > 39; i-=2){
+    board[i] = "RR";
+  }
+
+
+  return board;
+}
+
+function newGame(id, cookieOne, cookieTwo){
+  //create the new game object
+  var newGame = {gameID: id, playerOne: cookieOne, playerTwo: cookieTwo, board: newBoard()};
+  //push the new game into the game array
+  games.push(newGame);
+}
+
+function updateBoard(){
+  for(var i = 0; i < boardArray.length; i++){
+    if(boardArray[i] === 'RR'){
+      if(i+1 >= boardArray.length){
+        boardArray[i] = 'BC';
+        boardArray[0] = 'RR';
+        break;
+      }
+      else{
+        boardArray[i] = 'BC';
+        boardArray[i+1] = 'RR';
+        break;
+      }
+    }
+  }
+}
 
 //=================
 //Functions
@@ -60,7 +128,7 @@ function newGameID(){
     var newID = Math.floor(Math.random() * 1001);
     //check to see if the cookie is unique
     if(!checkCookie(newID)){
-      console.log("==returning new gameID:", newCookie);
+      console.log("==returning new gameID:", newID);
       //add the cookie to the player array
       //add the cookie to the player object first then push into the array
       return newID;
@@ -74,8 +142,20 @@ function checkGame(gameID){
   //check to see if the gameID is unique
   for(var i = 0; i < players.length; i++){
     if(players[i].gameID == gameID){
-      console.log("==GameID found");
+      //console.log("==GameID found");
       return true;
+    }
+  }
+  //gameID not found
+  return false;
+}
+
+function getGameID(cookie){
+  //check to see if the gameID is unique
+  for(var i = 0; i < players.length; i++){
+    if(players[i].cookie == cookie){
+      console.log("==Player Found found");
+      return players[i].gameID;
     }
   }
   //gameID not found
@@ -141,6 +221,35 @@ function timeoutLoop(){
   }, 3*60*1000)//check every 3 minutes to see if any usrs have timed out
 }
 
+function getGameObject(gameID){
+  //find the board apropreite to the gameID
+  for(var i = 0; i < games.length; i++){
+    if(games[i].gameID == gameID){
+      return games[i];
+    }
+  }
+}
+
+
+//======================
+//Checkers Functionality
+//======================
+
+function movePiece(board, start, stop){
+  console.log("++Moving Piece")
+  if(board){
+    if(board[start] != "BC" && board[stop] == "BC"){
+      board[stop] = board[start];
+      board[start] = "BC";
+    }
+  }
+  else{
+    console.log("Board is null");
+  }
+
+}
+
+
 
 //====================
 //Server Functionality
@@ -195,6 +304,8 @@ function timeoutLoop(){
          players[index].gameID = newID
          players[playerTwoIndex].gameID = newID
 
+         newGame(newID, players[index].cookie, players[playerTwoIndex].cookie);
+
          //send the new game ID to the player currently requesting it
          res.status(200).send(JSON.stringify(newID));
        }
@@ -211,6 +322,55 @@ function timeoutLoop(){
     //generate a new Cookie
     var cookie = newCookie();
     res.status(200).send(JSON.stringify(cookie));
+
+  });
+
+  app.post("/gameMove/:cookie/:start/:stop", function (req, res, next) {
+    //get the cookie from the URL
+    var cookie = parseInt(req.params.cookie);
+    //get the start_cell from the URL
+    var start = parseInt(req.params.start);
+    //get the stop_cell from the URL
+    var stop = parseInt(req.params.stop);
+
+    //get the game ID
+    var gameID = getGameID(cookie);
+
+    console.log("==GID:", gameID);
+
+    //get the game object
+    var game = getGameObject(gameID);
+
+    //update the gameboard with the player's move
+    console.log("==Updating the players position");
+    console.log("++START:", start, "++STOP", stop);
+
+    movePiece(game.board, start, stop);
+
+    res.status(200).send("success");
+
+  });
+
+  app.post("/graphics/:gameID", function (req, res, next) {
+    //get the cookie from the URL
+    var gameID = parseInt(req.params.gameID);
+
+    if(checkGame(gameID)){
+      //get the game object
+      var game = getGameObject(gameID);
+      //check to see if the game object isnt null
+      if(game){
+        //send the game board
+        res.status(200).send(JSON.stringify(game.board));
+      }
+    }
+    else{
+        res.status(404).send(JSON.stringify("cannot find game"));
+    }
+
+
+
+    //updateBoard();
 
   });
 
@@ -265,7 +425,7 @@ app.get('/timeout', function (req, res, next) {
 
 
   app.get('/game/checkers/:userID', function (req, res, next) {
-	
+
     //update the users timestamp
     //logUserInteraction(cookie);
 
