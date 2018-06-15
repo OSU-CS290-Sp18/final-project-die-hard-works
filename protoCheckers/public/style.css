@@ -183,3 +183,10 @@ a:focus {
   background-color: black;
   border: 5px solid gold;
 }
+
+.clicky{
+  width: 75px;
+  height: 75px;
+  border: 2px solid gold;
+  background-color: white;
+}

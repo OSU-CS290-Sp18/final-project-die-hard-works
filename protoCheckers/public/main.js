@@ -8,6 +8,9 @@ var gameID = 0;
 //the current board
 var board;
 
+//the previously clicked cell, if -1, then there was no previous click
+var previousClick = -1;
+
 
 //===============
 //Functions
@@ -173,7 +176,8 @@ function initBoard(){
 
     //create the clicked div
     var clicked = document.createElement('div');
-    clicked.className = 'notClicked';
+    //clicked.id = 'clicky';
+    clicked.className = 'clicky';
     clicked.style.display = 'none';
 
     //append states 1-4 onto the cell-wrapper
@@ -205,10 +209,15 @@ function initBoard(){
 }
 
 function requestBoard(){
+
+  //get the IDs stored in the browser
+  refreshIDs();
+
+
   //create the AJAX object
   var request = new XMLHttpRequest();
 
-  var reqURL = "/graphics/" + userID;
+  var reqURL = "/graphics/" + gameID;
   request.open("POST", reqURL);
 
   request.addEventListener('load', function (event) {
@@ -284,6 +293,55 @@ function updateGraphicsLoop(){
   }, 250)//check every quater second
 }
 
+function changeClick(event){
+  if(event.currentTarget.querySelector('.clicky').style.display == 'none'){
+    event.currentTarget.querySelector('.clicky').style.display = 'block'
+  }
+
+  var cells = document.getElementsByClassName('cell-wrapper');
+
+  //get the index of the cell
+  for(var i = 0; i < cells.length; i++){
+    if(cells[i].querySelector('.clicky').style.display == 'block'){
+      //set the display to none
+      cells[i].querySelector('.clicky').style.display = 'none'
+      //put the index in the next open space in the moveIndex array
+      if(previousClick < 0){
+        previousClick = i;
+      }
+      else{
+        //comunicate to the server with the selected cells
+        //get the IDs stored in the browser
+        refreshIDs();
+
+        //create the AJAX object
+        var request = new XMLHttpRequest();
+
+        var reqURL = "/gamemove/" + userID + '/' + previousClick + '/' + i;
+
+        request.open("POST", reqURL);
+
+        request.addEventListener('load', function (event) {
+          var message = event.target.response;
+          if (event.target.status != 200) {
+            console.log("Error sending cell indexes: " + message);
+          }
+          else{
+            //found a game!
+            console.log("==Moves Successfully sent");
+          }
+        }
+      );
+
+        request.send();
+
+        previousClick = -1;
+      }
+    }
+  }
+
+}
+
 
 //===============
 //Event Listners
@@ -324,6 +382,13 @@ window.addEventListener('DOMContentLoaded', function () {
     //waitPage.addEventListener('load', searchForGame);
     initBoard();
     updateGraphicsLoop();
+
+    //grab all the cell wrappers and assign the click event listener to them
+    var cells = document.getElementsByClassName('cell-wrapper');
+    //add an event listener to each cell-wrapper
+    for(var i = 0; i < cells.length; i++){
+    cells[i].addEventListener('click', changeClick);
+    }
   }
 
 
