@@ -481,7 +481,7 @@ app.get('/timeout', function (req, res, next) {
     }
 
     //assemble the scorebox stats into an object
-    var scoreData = {playerName: players[playerIndex].name, playerScore: players[playerIndex].score, opponentName: ,players[playerTwoIndex].name opponentScore:players[playerTwoIndex].score};
+    var scoreData = {playerName: players[playerIndex].name, playerScore: players[playerIndex].score, opponentName: players[playerTwoIndex].name, opponentScore:players[playerTwoIndex].score};
     //check to see if its a valid user ID
     if(checkCookie(cookie)){
       res.status(200).render('gamePage', score: scoreData);
