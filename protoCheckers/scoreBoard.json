@@ -1,11 +1,1 @@
-[
-	{
-		"name": "Player 1",
-		"score": 0
-	},
-	{
-		"name": "Player 2",
-		"score": 0
-
-	}
-]
+[{"name":"player","score":40},{"name":"player","score":40}]

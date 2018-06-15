@@ -174,6 +174,18 @@ function checkCookie(cookie){
   return false;
 }
 
+function findPlayer(cookie){
+  //find the players index in the array
+  for(var i = 0; i < players.length; i++){
+    if(players[i].cookie == cookie){
+      console.log("==Player found");
+      return i;
+    }
+  }
+  //cookie not found
+  return -1;
+}
+
 function logUserInteraction(passedCookie){
   console.log("++Updating Timestamp of User:", passedCookie);
   //update the users timestamp to prevent a timeout
@@ -228,6 +240,21 @@ function getGameObject(gameID){
       return games[i];
     }
   }
+}
+
+function updateScoreboard(name, score){
+  //read in the current scoreboard file
+  var content = JSON.parse(fs.readFileSync(filePath));
+
+  content.push({name: name, score: score});
+
+  fs.writeFile(filePath, JSON.stringify(content), 'utf8', function (err) {
+    if (err) {
+      return console.log(err);
+    }
+
+    console.log("The file was saved!");
+  });
 }
 
 
@@ -385,6 +412,11 @@ function movePiece(board, start, stop){
   //serve the scoreboard to the client
   app.get('/scoreboard', function(req, res){
     console.log("==Score Board Page Requested");
+
+    //read in the current scors from the scoreboard.json file
+    var scores = fs.readFileSync(filePath);
+    scores = JSON.parse(scores);
+
     res.status(200).render('scoreboardPage', {
    		score: scores
    	 });
@@ -424,23 +456,40 @@ app.get('/timeout', function (req, res, next) {
 });
 
 
-  app.get('/game/checkers/:userID', function (req, res, next) {
+  app.get('/game/checkers/:cookie', function (req, res, next) {
 
     //update the users timestamp
     //logUserInteraction(cookie);
+    //get the cookie from the URL
+    var cookie = parseInt(req.params.cookie);
+    //get the gameID
+    var gameID = getGameID(cookie);
+    //get the game getGameObject
+    var game = getGameObject(gameID);
 
+    //get the index of the requesting player
+    var playerIndex = findPlayer(cookie);
 
-	for (var i = 0; i < players.length; i++){
-		players[i].score += 20;
-		console.log("THIS IS THE NEW SCORE", players[i].score);
-		updateJsonFile(filePath, (data) => {
-			data.score = players[i].score;
-			return data;
-		});
+    //get the index of the second player
+    var playerTwoIndex = -1;
+    //check to see which cookie isnt the requesting player's
+    if(game.playerOne == cookie){
+      playerTwoIndex = findPlayer(game.playerTwo);
+    }
+    else{
+      playerTwoIndex = findPlayer(game.playerOne);
+    }
 
-	}
+    //assemble the scorebox stats into an object
+    var scoreData = {playerName: players[playerIndex].name, playerScore: players[playerIndex].score, opponentName: ,players[playerTwoIndex].name opponentScore:players[playerTwoIndex].score};
+    //check to see if its a valid user ID
+    if(checkCookie(cookie)){
+      res.status(200).render('gamePage', score: scoreData);
+    }
+    else{
+      res.status(404).render('404Page');
+    }
 
-     res.status(200).render('gamePage');
 
 });
 
