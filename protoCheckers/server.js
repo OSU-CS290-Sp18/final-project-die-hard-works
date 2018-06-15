@@ -456,14 +456,14 @@ app.get('/timeout', function (req, res, next) {
 });
 
 
-  app.get('/game/checkers/:cookie', function (req, res, next) {
+  app.get('/game/checkers/:gameID/:cookie', function (req, res, next) {
 
     //update the users timestamp
     //logUserInteraction(cookie);
     //get the cookie from the URL
     var cookie = parseInt(req.params.cookie);
     //get the gameID
-    var gameID = getGameID(cookie);
+    var gameID = parseInt(req.params.gameID);
     //get the game getGameObject
     var game = getGameObject(gameID);
 
@@ -479,12 +479,9 @@ app.get('/timeout', function (req, res, next) {
     else{
       playerTwoIndex = findPlayer(game.playerOne);
     }
-
-    //assemble the scorebox stats into an object
-    var scoreData = {playerName: players[playerIndex].name, playerScore: players[playerIndex].score, opponentName: players[playerTwoIndex].name, opponentScore:players[playerTwoIndex].score};
     //check to see if its a valid user ID
     if(checkCookie(cookie)){
-      res.status(200).render('gamePage', score: scoreData);
+      res.status(200).render('gamePage', {nameOne: players[playerIndex].name, scoreOne: players[playerIndex].score, nameTwo: players[playerTwoIndex].name, scoreTwo: players[playerTwoIndex].score});
     }
     else{
       res.status(404).render('404Page');

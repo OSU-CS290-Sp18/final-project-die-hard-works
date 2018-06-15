@@ -102,7 +102,7 @@ function searchForGame(){
         console.log("==New gameID:", message);
         gameID = message;
         window.sessionStorage.setItem("gameID", gameID);
-        changePage("/game/checkers/"+gameID);
+        changePage("/game/checkers/"+gameID+'/'+userID);
       }
     }
   );
