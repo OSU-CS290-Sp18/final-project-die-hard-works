@@ -99,7 +99,7 @@ function updateBoard(){
 //=================
 //Functions
 //=================
-function newCookie(){
+function newCookie(name){
 
   while(1){
     //generate a new cookie between 0 and 1000
@@ -109,7 +109,7 @@ function newCookie(){
       console.log("==returning new cookie:", newCookie);
       //add the cookie to the player array
       //add the cookie to the player object first then push into the array
-      var player = { gameID: 0, cookie: newCookie, timeout: date.getTime(), score: 0, name:"player"};
+      var player = { gameID: 0, cookie: newCookie, timeout: date.getTime(), score: 0, name:name};
       players.push(player);
       for(var i = 0; i < players.length; i++){
         console.log("==Players:", players[i]);
@@ -342,12 +342,13 @@ function movePiece(board, start, stop){
 
   });
 
-  app.post("/getCookie", function (req, res, next) {
-
+  app.post("/getCookie/:name", function (req, res, next) {
+    //get the cookie from the URL
+    var name = req.params.name;
     //give the player a unique ID
     console.log("==Serving Cookies");
     //generate a new Cookie
-    var cookie = newCookie();
+    var cookie = newCookie(name);
     res.status(200).send(JSON.stringify(cookie));
 
   });

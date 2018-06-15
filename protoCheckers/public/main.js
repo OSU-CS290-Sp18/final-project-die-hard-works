@@ -5,6 +5,9 @@ var userID = 0;
 //the users current game idea
 var gameID = 0;
 
+//the users name, only used in case of forces cookie refresh
+var name = "";
+
 //the current board
 var board;
 
@@ -16,9 +19,36 @@ var previousClick = -1;
 //Functions
 //===============
 
+function showModal(){
+  refreshIDs();
+  if(name != ""){
+    getUserID();
+  }
+  console.log("++");
+  var Modal = document.getElementById('playerNameInput');
+
+  // Show the modal and its backdrop.
+  Modal.classList.remove("hidden");
+}
+
+function hideModal(){
+  console.log("--");
+  var Modal = document.getElementById('playerNameInput');
+
+  // Show the modal and its backdrop.
+  Modal.classList.add("hidden");
+
+  var inputElems = document.getElementsByClassName('input-element');
+  for (var i = 0; i < inputElems.length; i++) {
+    var input = inputElems[i].querySelector('input, textarea');
+    input.value = '';
+  }
+}
+
 function refreshIDs(){
   userID = window.sessionStorage.getItem("userID");
   gameID = window.sessionStorage.getItem("gameID");
+  name = window.sessionStorage.getItem("name");
 }
 
 function clearTheCookies(){
@@ -27,6 +57,7 @@ function clearTheCookies(){
   gameID = 0;
   window.sessionStorage.setItem("userID", userID);
   window.sessionStorage.setItem("gameID", gameID);
+  //window.sessionStorage.setItem("name", "");
 }
 
 function getContentFromURL(index) {
@@ -41,15 +72,17 @@ function getContentFromURL(index) {
 }
 
 function getUserID(){
+
   console.log("Getting User ID");
   refreshIDs();
   //create the AJAX object
   var request = new XMLHttpRequest();
   //check to see if the user already has a cookie before requesting a new one
   console.log("userID = ", userID);
+  console.log("name", name);
   if(userID == 0){
     //request the user ID from the server
-    var reqURL = "/getCookie";
+    var reqURL = "/getCookie/"+name;
     request.open("POST", reqURL);
 
     request.addEventListener('load', function (event) {
@@ -69,8 +102,11 @@ function getUserID(){
 
     request.send();
   }
-  else{
+  else if(name != ""){
     changePage("/init/"+userID+"/wait");
+  }
+  else{
+    changePage("/");
   }
 
 }
@@ -357,6 +393,21 @@ function hideTurn() { //INSERT FUNCTIONALITY FOR WHEN WE KNOW WHOS TURN IT IS.
 
 }
 
+function getName(){
+    // get the user's text inputElems
+    var text_input_box = document.getElementById('text-input');
+
+      name = text_input_box.value;
+      window.sessionStorage.setItem("name", name);
+      if(name == ""){
+        alert("Please Enter a name, human.");
+        return;
+      }
+      else{
+        getUserID();
+      }
+}
+
 
 //===============
 //Event Listners
@@ -369,7 +420,22 @@ window.addEventListener('DOMContentLoaded', function () {
 
   var startButton = document.getElementById('big-start-button');
   if(startButton){
-    startButton.addEventListener('click', getUserID);
+    startButton.addEventListener('click', showModal);
+  }
+
+  var acceptBtn = document.getElementById('modal-accept-button');
+  if(acceptBtn){
+    acceptBtn.addEventListener('click', getName);
+  }
+
+  var cancelBtn = document.getElementById('modal-cancel-button');
+  if(cancelBtn){
+    cancelBtn.addEventListener('click', hideModal);
+  }
+
+  var exitBtn = document.getElementById('modal-close-button');
+  if(exitBtn){
+    exitBtn.addEventListener('click', hideModal);
   }
 
   var clearCookies = document.getElementById('clear-cookie-button');
@@ -416,6 +482,7 @@ window.onload = function () {
         gameID = 0;
         window.sessionStorage.setItem("userID", userID);
         window.sessionStorage.setItem("gameID", gameID);
+        window.sessionStorage.setItem("name", "");
         window.sessionStorage.setItem("hasCodeRunBefore", true);
     }
 }
