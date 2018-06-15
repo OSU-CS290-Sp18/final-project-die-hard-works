@@ -74,7 +74,7 @@ function newBoard(){
 
 function newGame(id, cookieOne, cookieTwo){
   //create the new game object
-  var newGame = {gameID: id, playerOne: cookieOne, playerTwo: cookieTwo, board: newBoard()};
+  var newGame = {gameID: id, playerOne: cookieOne, playerTwo: cookieTwo, board: newBoard(), active: true};
   //push the new game into the game array
   games.push(newGame);
 }
@@ -111,6 +111,7 @@ function newCookie(name){
       //add the cookie to the player object first then push into the array
       var player = { gameID: 0, cookie: newCookie, timeout: date.getTime(), score: 0, name:name};
       players.push(player);
+      updateScoreboard(name, players.length);
       for(var i = 0; i < players.length; i++){
         console.log("==Players:", players[i]);
       }
@@ -242,14 +243,14 @@ function getGameObject(gameID){
   }
 }
 
-function updateScoreboard(name1, score1,name2,score2){
+function updateScoreboard(name, score){
   //read in the current scoreboard file
   var file = fs.readFileSync(filePath);
 
   var content = JSON.parse(file);
 
-  content.push({"name": name1, "score": score1});
-  content.push({"name": name2, "score": score2});
+  content.push({"name": name, "score": score});
+
 
   fs.writeFile(filePath, JSON.stringify(content), 'utf8', function (err) {
     if (err) {
@@ -310,7 +311,7 @@ function movePiece(board, start, stop){
      }
 
      //if the player has already been assigned a game that is currently in progress, send them there
-     if(index >= 0 && players[index].gameID != 0){
+     if(index >= 0 && players[index].gameID != 0 && getGameObject(players[index].gameID).active){
        console.log("++Player was already assigned a game in progress");
        res.status(200).send(JSON.stringify(players[index].gameID));
      }
@@ -403,12 +404,34 @@ function movePiece(board, start, stop){
     else{
         res.status(404).send(JSON.stringify("cannot find game"));
     }
-
-
-
-    //updateBoard();
-
   });
+
+  //   app.post("/active/:gameID", function (req, res, next) {
+  //     //get the cookie from the URL
+  //     var gameID = parseInt(req.params.gameID);
+  //
+  //     var game = getGameObject(gameID);
+  //
+  //     if(game){
+  //       res.status(200).send(JSON.stringify(game.active));
+  //     }
+  //     else{
+  //       res.status(200).send(JSON.stringify(false));
+  //     }
+  //
+  //
+  //   //updateBoard();
+  //
+  // });
+
+  app.post("/exitpage", function (req, res, next) {
+    res.status(200).render('exitpage');
+
+
+
+  //updateBoard();
+
+});
 
 
 
@@ -429,29 +452,28 @@ function movePiece(board, start, stop){
     res.status(200).render('scoreboardPage', {item: score});
   });
 
-  app.get('/exit/:gameID', function(req, res){
-    //exits a game
-    var gameID = parseInt(req.params.gameID);
-
-    //get the game object
-    var game = getGameObject(gameID);
-
-    updateScoreboard(players[findPlayer(game.playerOne)].name, players[findPlayer(game.playerOne)].score,players[findPlayer(game.playerTwo)].name, players[findPlayer(game.playerTwo)].score);
-
-    players[findPlayer(game.playerOne)].game = 0;
-    players[findPlayer(game.playerTwo)].game = 0;
-
-    var tempGame = [];
-    for(var i = 0; i < games.length; i++){
-      if(games[i].gameID != gameID){
-        tempGame.push(games[i]);
-        console.log("++PUSH");
-      }
-    }
-    games = tempGame;
-
-    res.status(200).render('homePage');
-  });
+  // app.get('/exit/:gameID', function(req, res){
+  //   //exits a game
+  //
+  //   var gameID = parseInt(req.params.gameID);
+  //   console.log("++QUITTING GAME", gameID)
+  //   var game = getGameObject(gameID);
+  //
+  //   // updateScoreboard(players[findPlayer(game.playerOne)].name, players[findPlayer(game.playerOne)].score,players[findPlayer(game.playerTwo)].name, players[findPlayer(game.playerTwo)].score);
+  //
+  //   players[findPlayer(game.playerOne)].game = 0;
+  //   players[findPlayer(game.playerTwo)].game = 0;
+  //
+  //
+  //   for(var i = 0; i < games.length; i++){
+  //     if(games[i].gameID == gameID){
+  //       games[i].active = false;
+  //     }
+  //   }
+  //   // games = tempGame;
+  //
+  //   res.status(200).send(false);
+  // });
 
 
 

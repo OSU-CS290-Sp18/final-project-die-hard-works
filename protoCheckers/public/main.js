@@ -272,6 +272,36 @@ function requestBoard(){
   request.send();
 }
 
+// function active(){
+//
+//   //get the IDs stored in the browser
+//   refreshIDs();
+//
+//
+//   //create the AJAX object
+//   var request = new XMLHttpRequest();
+//
+//   var reqURL = "/active/" + gameID;
+//   request.open("POST", reqURL);
+//
+//   request.addEventListener('load', function (event) {
+//     var message = event.target.response;
+//     if (event.target.status != 200) {
+//       console.log("Game Over!");
+//       gameID = 0;
+//       window.sessionStorage.setItem("gameID", gameID);
+//       changePage("/exitpage");
+//     }
+//     else{
+//       //found a game!
+//       console.log("==Game Continuing");
+//     }
+//   }
+// );
+//
+//   request.send();
+// }
+
 function updateGraphics(){
   //console.log("==Updating Graphics...");
   //request a new board from the server
@@ -328,6 +358,18 @@ function updateGraphicsLoop(){
 
   }, 250)//check every quater second
 }
+
+// function checkActive(){
+//   //every 5 seconds, check to see if your game is ready
+//   setTimeout(function(){
+//
+//     active();//check to see if any users have timed out
+//
+//     checkActive();//recall the loop
+//
+//   }, 250)//check every quater second
+// }
+
 
 function changeClick(event){
   if(event.currentTarget.querySelector('.clicky').style.display == 'none'){
@@ -408,12 +450,40 @@ function getName(){
       }
 }
 
-function exitGame(){
-  //send a request to the server to exit the games
-  console.log("++EXIT");
-  //alert("Clicky!");
-  changePage("/exit/"+gameID);
-}
+// function exitGame(){
+//   refreshIDs();
+//   //send a request to the server to exit the games
+//   console.log("++EXIT");
+//   //alert("Clicky!");
+//   //create the AJAX object
+//   var request = new XMLHttpRequest();
+//
+//   var reqURL = "/exit/" + gameID;
+//   request.open("POST", reqURL);
+//
+//   request.addEventListener('load', function (event) {
+//     var message = event.target.response;
+//     if (event.target.status == 200) {
+//       //console.log("Game Over!");
+//       if(message == false){
+//         gameID = 0;
+//         window.sessionStorage.setItem("gameID", gameID);
+//         changePage("/exitpage");
+//       }
+//       else{
+//         console.log("==Game Continuing");
+//       }
+//
+//     }
+//     else{
+//       //found a game!
+//       console.log("==Game Continuing");
+//     }
+//   }
+// );
+//
+//   request.send();
+// }
 
 
 //===============
@@ -475,6 +545,7 @@ window.addEventListener('DOMContentLoaded', function () {
     //waitPage.addEventListener('load', searchForGame);
     initBoard();
     updateGraphicsLoop();
+    //checkActive();
 
     //grab all the cell wrappers and assign the click event listener to them
     var cells = document.getElementsByClassName('cell-wrapper');
