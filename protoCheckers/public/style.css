@@ -133,8 +133,28 @@ a:focus {
 
   position: fixed;
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translateY(-50%, -50%);
 }
+
+.bindingColor {
+	color: #F07221;
+	position: fixed;
+  	top: 20%;
+ 	left: 50%;
+  	transform: translate(-50%, -50%);
+
+	border: 1px solid;
+	border-color: #FF6300;
+	box-shadow: 5px 10px #090909;
+	background: #505050
+}
+
+#pageBackground {
+  background-color: #3D3D3D 
+}
+
+
 /*formate the cells*/
 .cell-wrapper {
   width: 75px;
