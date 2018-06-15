@@ -6,6 +6,12 @@ var expressHB = require('express-handlebars');
 
 var bodyParse = require('body-parser');
 
+var fs = require('fs');
+
+var updateJsonFile = require('update-json-file');
+var filePath = "./scoreBoard.json";
+
+
 var app = express();
 var port = process.env.PORT || 3000;
 
@@ -103,7 +109,7 @@ function newCookie(){
       console.log("==returning new cookie:", newCookie);
       //add the cookie to the player array
       //add the cookie to the player object first then push into the array
-      var player = { gameID: 0, cookie: newCookie, timeout: date.getTime()};
+      var player = { gameID: 0, cookie: newCookie, timeout: date.getTime(), score: 0, name:"player"};
       players.push(player);
       for(var i = 0; i < players.length; i++){
         console.log("==Players:", players[i]);
@@ -422,6 +428,17 @@ app.get('/timeout', function (req, res, next) {
 
     //update the users timestamp
     //logUserInteraction(cookie);
+
+
+	for (var i = 0; i < players.length; i++){
+		players[i].score += 20;
+		console.log("THIS IS THE NEW SCORE", players[i].score);
+		updateJsonFile(filePath, (data) => {
+			data.score = players[i].score;
+			return data;
+		});
+
+	}
 
      res.status(200).render('gamePage');
 
