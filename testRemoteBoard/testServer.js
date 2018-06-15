@@ -13,22 +13,22 @@ var gameCSS = fs.readFileSync('./style.css');
 var boardArray = [];
 for(var i = 0; i < 64; i++){
   //init the gameboard array to length 64 with each cell == 'B'
-  boardArray.push('B');
+  boardArray.push('BC');
 }
 //set the first gameboard element to be 'R'
-boardArray[0] = 'R';
+boardArray[0] = 'RR';
 
 function updateBoard(){
   for(var i = 0; i < boardArray.length; i++){
-    if(boardArray[i] === 'R'){
+    if(boardArray[i] === 'RR'){
       if(i+1 >= boardArray.length){
-        boardArray[i] = 'B';
-        boardArray[0] = 'R';
+        boardArray[i] = 'BC';
+        boardArray[0] = 'RR';
         break;
       }
       else{
-        boardArray[i] = 'B';
-        boardArray[i+1] = 'R';
+        boardArray[i] = 'BC';
+        boardArray[i+1] = 'RR';
         break;
       }
     }
