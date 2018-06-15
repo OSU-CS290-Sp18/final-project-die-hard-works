@@ -1,4 +1,4 @@
-<body ID="pageBackground">
+<body>
 <main>
 
   <h1 ID="yourTurn" class="bindingColor"
@@ -8,6 +8,12 @@
   <h1 ID="NotyourTurn" class="bindingColor">
   	It is your opponents turn!
   </h1>
+
+  {{> scorebox playerName = Score.playerName 
+playerScore = Score.playerScore
+opponentName = Score.opponentName
+opponentScore = Score.opponentScore }}
+ 
 
   <div ID = "checkerboard">
   </div>

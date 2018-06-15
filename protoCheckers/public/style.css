@@ -60,11 +60,11 @@ a:focus {
 #big-start-button{
   width: 400px;
   height: 150px;
-  background-color: #319df6;
+  background-color: #000000;
   color: #FFFFFF;
   border-radius: 50px;
   margin: 50px;
-  border: 3px solid black;
+  border: 3px solid white;
   font-size: 18px;
 
   position: fixed;
@@ -75,7 +75,8 @@ a:focus {
 }
 
 #big-start-button:hover{
-  background-color: #2FB1EF;
+  border: 3px solid #F07221;
+  color: #F07221; 
 }
 
 #clear-cookie-button{
@@ -132,17 +133,17 @@ a:focus {
   border: 2px solid black;
 
   position: fixed;
-  top: 50%;
+  top: 55%;
   left: 50%;
-  transform: translateY(-50%, -50%);
+  transform: translate(-20%, -50%);
 }
 
 .bindingColor {
 	color: #F07221;
 	position: fixed;
-  	top: 20%;
+  	top: 12%;
  	left: 50%;
-  	transform: translate(-50%, -50%);
+  	transform: translate(-150%, -50%);
 
 	border: 1px solid;
 	border-color: #FF6300;
@@ -152,6 +153,11 @@ a:focus {
 
 #pageBackground {
   background-color: #3D3D3D 
+}
+
+#gameInformationBox {
+	border: 1px solid #FF6300;
+	
 }
 
 
