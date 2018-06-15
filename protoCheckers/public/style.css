@@ -145,7 +145,7 @@ a:focus {
 	color: #F07221;
 	position: fixed;
   	top: 12%;
- 	left: 50%;
+ 	left: 37%;
   	transform: translate(-150%, -25%);
 
 	border: 1px solid;
@@ -165,10 +165,28 @@ a:focus {
 	box-shadow: 5px 10px #090909;
 	background: #505050;
 
+  width: 150px;
+
 	position: fixed;
 	top: 50%;
-	left 50%;
-	transform: translate(150%, -30%);
+	left: 15%;
+	/* transform: translate(150%, -30%); */
+	padding: 4px;
+}
+
+#exit-game {
+	color: #F07221;
+	border: 3px solid;
+	border-color: #F0722;
+	box-shadow: 5px 10px #090909;
+	background: #505050;
+
+  width: 150px;
+
+	position: fixed;
+	top: 80%;
+	left: 15.5%;
+	/* transform: translate(150%, -30%); */
 	padding: 4px;
 }
 
@@ -234,24 +252,36 @@ a:focus {
         background: #505050;
 
         position: fixed;
-        top: 45%;
-        left 45%;
-        transform: translate(260%, -200%);
+        top: 10%;
+        left: 50%;
+        /* transform: translate(260%, -200%); */
         padding: 4px;
 }
 
+#flexy{
+  margin: 50px 10%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .bob {
+  flex: 0 1 28%;
+   display: flex;
+   margin: 2px;
+   padding: 20px;
+
         color: #F07221;
         border: 3px solid;
         border-color: #F0722;
         box-shadow: 5px 10px #090909;
         background: #505050;
+        
 
-        position: fixed;
-        top: 50%;
-        left 80%;
-        transform: translate(120%, -10%);
-        padding: 40px 125px;
+
+        /* top: 50%;
+        left 80%; */
+        /* transform: translate(120%, -10%); */
+
 }
 
 

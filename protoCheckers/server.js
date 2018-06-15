@@ -415,12 +415,10 @@ function movePiece(board, start, stop){
     console.log("==Score Board Page Requested");
 
     //read in the current scors from the scoreboard.json file
-    var scores = fs.readFileSync(filePath);
-    scores = JSON.parse(scores);
+    var score = fs.readFileSync(filePath);
+    score = JSON.parse(score);
 
-    res.status(200).render('scoreboardPage', {
-   		score: scores
-   	 });
+    res.status(200).render('scoreboardPage', {item: score});
   });
 
 
