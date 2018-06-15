@@ -242,11 +242,14 @@ function getGameObject(gameID){
   }
 }
 
-function updateScoreboard(name, score){
+function updateScoreboard(name1, score1,name2,score2){
   //read in the current scoreboard file
-  var content = JSON.parse(fs.readFileSync(filePath));
+  var file = fs.readFileSync(filePath);
 
-  content.push({name: name, score: score});
+  var content = JSON.parse(file);
+
+  content.push({"name": name1, "score": score1});
+  content.push({"name": name2, "score": score2});
 
   fs.writeFile(filePath, JSON.stringify(content), 'utf8', function (err) {
     if (err) {
@@ -265,8 +268,8 @@ function updateScoreboard(name, score){
 function movePiece(board, start, stop){
   console.log("++Moving Piece")
   if(board){
-	  score+=1;
-	  updateScoreboard("player", score);
+
+	  //updateScoreboard("player", score);
     if(board[start] != "BC" && board[stop] == "BC"){
       board[stop] = board[start];
       board[start] = "BC";
@@ -371,6 +374,9 @@ function movePiece(board, start, stop){
     //get the game object
     var game = getGameObject(gameID);
 
+    //increase the players score
+    players[findPlayer(cookie)].score += 1;
+
     //update the gameboard with the player's move
     console.log("==Updating the players position");
     console.log("++START:", start, "++STOP", stop);
@@ -430,9 +436,21 @@ function movePiece(board, start, stop){
     //get the game object
     var game = getGameObject(gameID);
 
-    
+    updateScoreboard(players[findPlayer(game.playerOne)].name, players[findPlayer(game.playerOne)].score,players[findPlayer(game.playerTwo)].name, players[findPlayer(game.playerTwo)].score);
 
-    res.status(200).render('scoreboardPage');
+    players[findPlayer(game.playerOne)].game = 0;
+    players[findPlayer(game.playerTwo)].game = 0;
+
+    var tempGame = [];
+    for(var i = 0; i < games.length; i++){
+      if(games[i].gameID != gameID){
+        tempGame.push(games[i]);
+        console.log("++PUSH");
+      }
+    }
+    games = tempGame;
+
+    res.status(200).render('homePage');
   });
 
 
