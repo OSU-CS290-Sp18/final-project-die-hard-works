@@ -421,6 +421,18 @@ function movePiece(board, start, stop){
     res.status(200).render('scoreboardPage', {item: score});
   });
 
+  app.get('/exit/:gameID', function(req, res){
+    //exits a game
+    var gameID = parseInt(req.params.gameID);
+
+    //get the game object
+    var game = getGameObject(gameID);
+
+    
+
+    res.status(200).render('scoreboardPage');
+  });
+
 
 
   app.get("/init/:cookie/wait", function (req, res, next) {

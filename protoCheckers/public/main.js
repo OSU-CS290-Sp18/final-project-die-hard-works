@@ -408,6 +408,13 @@ function getName(){
       }
 }
 
+function exitGame(){
+  //send a request to the server to exit the games
+  console.log("++EXIT");
+  //alert("Clicky!");
+  changePage("/exit/"+gameID);
+}
+
 
 //===============
 //Event Listners
@@ -421,6 +428,11 @@ window.addEventListener('DOMContentLoaded', function () {
   var startButton = document.getElementById('big-start-button');
   if(startButton){
     startButton.addEventListener('click', showModal);
+  }
+
+  var potato = document.getElementById('exit-game');
+  if(potato){
+    potato.addEventListener('click', exitGame);
   }
 
   var acceptBtn = document.getElementById('modal-accept-button');
