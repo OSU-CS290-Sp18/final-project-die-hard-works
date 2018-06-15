@@ -28,7 +28,7 @@ var players = [];
 //the game array
 var games = [];
 
-
+var score = 0;
 
 //
 // Temp Functionality
@@ -265,6 +265,8 @@ function updateScoreboard(name, score){
 function movePiece(board, start, stop){
   console.log("++Moving Piece")
   if(board){
+	  score+=1;
+	  updateScoreboard("player", score);
     if(board[start] != "BC" && board[stop] == "BC"){
       board[stop] = board[start];
       board[start] = "BC";
